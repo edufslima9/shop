@@ -30,6 +30,9 @@ namespace Shop.Controllers
     [Route("")]
     public async Task<ActionResult<Category>> Post([FromBody] Category model)
     {
+      if (!ModelState.IsValid)
+        return BadRequest(ModelState);
+      
       return Ok(model);
     }
 
@@ -37,6 +40,9 @@ namespace Shop.Controllers
     [Route("")]
     public async Task<ActionResult<Category>> Put([FromBody] Category model)
     {
+      if (!ModelState.IsValid)
+        return BadRequest(ModelState);
+
       return Ok(model);
       
     }
