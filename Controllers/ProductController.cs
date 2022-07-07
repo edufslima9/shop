@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shop.Data;
@@ -14,6 +15,7 @@ namespace Shop.Controllers
   {
     [HttpGet]
     [Route("")]
+    [AllowAnonymous]
     public async Task<ActionResult<List<Product>>> Get([FromServices] DataContext context)
     {
       var products = await context.Products
@@ -26,6 +28,7 @@ namespace Shop.Controllers
 
     [HttpGet]
     [Route("{id:int}")]
+    [AllowAnonymous]
     public async Task<ActionResult<Product>> GetById(int id, [FromServices] DataContext context)
     {
       var product = await context.Products
@@ -41,6 +44,7 @@ namespace Shop.Controllers
 
     [HttpGet]
     [Route("categories/{id:int}")]
+    [AllowAnonymous]
     public async Task<ActionResult<List<Product>>> GetByCategoryId(int categoryId, [FromServices] DataContext context)
     {
       var products = await context.Products
@@ -54,6 +58,7 @@ namespace Shop.Controllers
 
     [HttpPost]
     [Route("")]
+    [Authorize(Roles = "employee")]
     public async Task<ActionResult<Product>> Post([FromBody] Product model, [FromServices] DataContext context)
     {
       if (!ModelState.IsValid)
@@ -74,6 +79,7 @@ namespace Shop.Controllers
 
     [HttpPut]
     [Route("")]
+    [Authorize(Roles = "manager")]
     public async Task<ActionResult<Product>> Put([FromBody] Product model, [FromServices] DataContext context)
     {
       if (!ModelState.IsValid)
@@ -97,6 +103,7 @@ namespace Shop.Controllers
 
     [HttpDelete]
     [Route("{id:int}")]
+    [Authorize(Roles = "manager")]
     public async Task<ActionResult<string>> Delete(int id, [FromServices] DataContext context)
     {
       var product = await context.Products.FirstOrDefaultAsync(x => x.Id == id);
